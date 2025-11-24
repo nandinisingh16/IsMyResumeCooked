@@ -16,7 +16,8 @@ import datetime
 import random
 import os
 from PIL import Image
-import pymysql
+import sqlite3
+
 from pypdf import PdfReader  # modern maintained pypdf
 from Courses import (
     ds_course, web_course, android_course, ios_course, uiux_course,
@@ -30,46 +31,10 @@ from resume_parser import parse_resume
 DB_TABLE = "user_data"
 
 def get_connection():
-    """
-    Use Streamlit secrets for MySQL credentials.
-    If the configured database does not exist (error 1049), connect without a database,
-    create it, then reconnect using the requested database.
-    Expects st.secrets["mysql"] with keys: host, user, password, database
-    """
-    secrets = st.secrets["mysql"]
-    try:
-        return pymysql.connect(
-            host=secrets["host"],
-            user=secrets["user"],
-            password=secrets["password"],
-            database=secrets["database"],
-            autocommit=True
-        )
-    except pymysql.err.OperationalError as e:
-        # Unknown database -> create it then reconnect
-        if getattr(e, "args", [None])[0] == 1049:
-            tmp_conn = pymysql.connect(
-                host=secrets["host"],
-                user=secrets["user"],
-                password=secrets["password"],
-                autocommit=True
-            )
-            tmp_cursor = tmp_conn.cursor()
-            tmp_cursor.execute(
-                f"CREATE DATABASE IF NOT EXISTS `{secrets['database']}` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-            )
-            tmp_cursor.close()
-            tmp_conn.close()
-            # reconnect to the newly created database
-            return pymysql.connect(
-                host=secrets["host"],
-                user=secrets["user"],
-                password=secrets["password"],
-                database=secrets["database"],
-                autocommit=True
-            )
-        # re-raise other connection errors
-        raise
+    conn = sqlite3.connect("resume_data.db", check_same_thread=False)
+    conn.execute("PRAGMA journal_mode=WAL;")
+    return conn
+
 # Initialize single connection using secrets
 connection = get_connection()
 cursor = connection.cursor()
@@ -77,21 +42,21 @@ cursor = connection.cursor()
 # Create table if not exists (keeps original structure)
 create_table_sql = f"""
 CREATE TABLE IF NOT EXISTS {DB_TABLE} (
-    ID INT NOT NULL AUTO_INCREMENT,
-    Name VARCHAR(500) NOT NULL,
-    Email_ID VARCHAR(500) NOT NULL,
-    resume_score VARCHAR(8) NOT NULL,
-    Timestamp VARCHAR(50) NOT NULL,
-    Page_no VARCHAR(5) NOT NULL,
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name TEXT NOT NULL,
+    Email_ID TEXT NOT NULL,
+    resume_score TEXT NOT NULL,
+    Timestamp TEXT NOT NULL,
+    Page_no TEXT NOT NULL,
     Predicted_Field BLOB NOT NULL,
     User_level BLOB NOT NULL,
     Actual_skills BLOB NOT NULL,
     Recommended_skills BLOB NOT NULL,
-    Recommended_courses BLOB NOT NULL,
-    PRIMARY KEY (ID)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+    Recommended_courses BLOB NOT NULL
+);
 """
 cursor.execute(create_table_sql)
+
 
 
 # --- HELPERS ---
@@ -117,7 +82,12 @@ def get_table_download_link(df: pd.DataFrame, filename: str, link_text: str):
 def insert_data(name, email, res_score, timestamp, no_of_pages, reco_field, cand_level, skills, recommended_skills, courses):
     """Insert a single record into MySQL table."""
     # Do not include ID in the VALUES — let AUTO_INCREMENT handle it.
-    insert_sql = f"INSERT INTO {DB_TABLE} (Name, Email_ID, resume_score, Timestamp, Page_no, Predicted_Field, User_level, Actual_skills, Recommended_skills, Recommended_courses) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    insert_sql = f"""
+    INSERT INTO {DB_TABLE}
+    (Name, Email_ID, resume_score, Timestamp, Page_no,
+    Predicted_Field, User_level, Actual_skills, Recommended_skills, Recommended_courses)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """
     cursor.execute(insert_sql, (
         name,
         email,
@@ -128,7 +98,7 @@ def insert_data(name, email, res_score, timestamp, no_of_pages, reco_field, cand
         cand_level,
         str(skills),
         str(recommended_skills),
-        str(courses),
+        str(courses)
     ))
 
 
