@@ -1,0 +1,88 @@
+# ----------------------------
+# Python & Streamlit Project
+# ----------------------------
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+
+# Virtual environment
+env/
+venv/
+ENV/
+.venv/
+
+# Streamlit cache & secrets
+.streamlit/
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# VSCode / IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Python build / distribution
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Jupyter checkpoints (if present)
+.ipynb_checkpoints/
+
+# PyPDF2, SpaCy, NLTK models (large)
+*nltk_data*/
+spacy_models/
+*.whl
+
+# Uploaded resumes
+uploads/
+uploaded_files/
+*.pdf
+*.doc
+*.docx
+*.txt
+
+# Model files
+*.bin
+*.h5
+*.pt
+*.pkl
+model/
+models/
+
+# SQL / database files (local DB)
+*.db
+*.sqlite3
+*.sql
+
+# Config / keys / credentials
+config.json
+credentials.json
+token.json
+apikey.txt
+
+# Cache
+cache/
+__cache__/
+*.cache
+
+# Random OS files
+*.swp
+*.swo

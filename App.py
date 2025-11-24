@@ -27,17 +27,30 @@ from Courses import (
 from resume_parser import parse_resume
 
 # --- DATABASE SETUP (single initialization) ---
-DB_HOST = "localhost"
-DB_USER = "root"
-DB_PASSWORD = "2216rnS030204."
-DB_NAME = "cv"
 DB_TABLE = "user_data"
 
-connection = pymysql.connect(host=DB_HOST, user=DB_USER, password=DB_PASSWORD, autocommit=True)
+def get_connection():
+    """
+    Use Streamlit secrets for MySQL credentials.
+    Add a `mysql` section to .streamlit/secrets.toml or in Streamlit Cloud secrets:
+    [mysql]
+    host = "localhost"
+    user = "root"
+    password = "yourpassword"
+    database = "cv"
+    """
+    secrets = st.secrets["mysql"]
+    return pymysql.connect(
+        host=secrets["host"],
+        user=secrets["user"],
+        password=secrets["password"],
+        database=secrets["database"],
+        autocommit=True
+    )
+
+# Initialize single connection using secrets
+connection = get_connection()
 cursor = connection.cursor()
-# Create database and use it
-cursor.execute(f"CREATE DATABASE IF NOT EXISTS `{DB_NAME}`;")
-cursor.execute(f"USE `{DB_NAME}`;")
 
 # Create table if not exists (keeps original structure)
 create_table_sql = f"""
