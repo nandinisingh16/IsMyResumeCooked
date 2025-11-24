@@ -1,150 +1,136 @@
 
+---
+**Live demo:** https://ismyresumecooked-xcrlp4mexfdrdxpclynlfv.streamlit.app/
+---
+# Is My Resume Cooked
+**Score it. Fix it. Level up your job hunt.**
+
+[![Streamlit](https://img.shields.io/badge/Streamlit-App-orange)](https://ismyresumecooked-xcrlp4mexfdrdxpclynlfv.streamlit.app/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
+[![spaCy](https://img.shields.io/badge/spaCy-NLP-orange)](https://spacy.io/)
 
 ---
 
+**Is My Resume Cooked** is a local, Streamlit-based resume analyzer that extracts contact info, detects skills, predicts a best-fit field, scores resume completeness, and recommends skill & course upgrades — built for fast, repeatable improvements to candidate profiles.
 
-````markdown
-Is My Resume Cooked?
-**Score it. Fix it. Level up your job hunt.**  
-A Streamlit-powered resume analysis app that extracts information from a PDF resume, analyzes skills & sections, predicts your field, and recommends improvements.
-
-🔗 **Live Demo:** https://ismyresumecooked-xcrlp4mexfdrdxpclynlfv.streamlit.app/
+**Live demo:** https://ismyresumecooked-xcrlp4mexfdrdxpclynlfv.streamlit.app/
 
 ---
 
- Overview
-**Is My Resume Cooked** helps job seekers understand how strong their resume is by analyzing:
-
-- Extracted name, email, phone, skills  
-- Candidate level (Fresher / Intermediate / Experienced)  
-- Word-level keyword matching  
-- Section completeness (projects, education, experience…)  
-- Recommended skills to add  
-- Suggested job field  
-- Resume quality score  
-- Recommended online courses
-
-Everything happens locally inside the session — safe and private.
+## Why this project matters (for recruiters / hiring managers)
+- **Demonstrates practical ML/NLP skills:** parsing pipelines, NER, regex heuristics and feature engineering.  
+- **Product sense:** UI/UX decisions for resume preview, score transparency, and actionable recommendations.  
+- **Engineering hygiene:** Streamlit deployment, packaging, and optional persistence (MySQL) for analytics.  
+- **Impact:** Helps candidates improve resumes with measurable, explainable changes — directly translatable to screening/ATS pipelines.
 
 ---
 
- Features
-
-  Resume Parsing
-- Upload a single **PDF resume**
-- Extracts:
-  - Name  
-  - Email  
-  - Phone  
-  - Page count  
-  - Skills  
-  - Text preview  
-- Uses `spaCy` for NER and custom regex-based extraction.
+## What this repo proves about the author
+- Experience building **end-to-end NLP pipelines** and user-facing product features.  
+- Ability to **balance accuracy, speed and UX** — pragmatic use of spaCy, pdf parsers and heuristic rules.  
+- Familiarity with data engineering basics (DB logging, export, visualization).  
+- Comfort deploying production web apps (Streamlit) and preparing them for reuse.
 
 ---
 
-  Smart Analysis
-- Detects **candidate level** using rules + skills  
-- Counts keyword matches across fields:
-  - Data Science  
-  - Web Development  
-  - Android  
-  - iOS  
-  - UI/UX  
-- Computes a **resume score (0–100)** based on:
-  - Section completeness  
-  - Skill variety  
-  - Project/experience presence  
+## Project Structure
+```
+
+Resume/
+│── App.py                   # Streamlit app (entry point)
+│── courses.py               # Course lists & metadata
+│── resume_parser.py         # Parser: spacy + regex + skill extractor
+│── requirements.txt
+│── README.md
+│── logos/
+│── uploadedresumes/          # (ignored by git) uploaded test PDFs
+│── .gitignore
+
+```
 
 ---
 
-  Field Prediction
-Chooses the most suitable field based on matched keywords.
+## Architecture & Workflow
 
-Example fields:
-- Data Science  
-- Web Development  
-- UI/UX  
-- Android  
-- iOS  
+**High level flow**
 
----
+```
 
-  Course Recommendations
-Suggests curated courses based on predicted field.
+[User uploads PDF]
+↓
+[PDF Reader (pypdf / pdfplumber)]  → extract text & page count
+↓
+[Resume Parser (resume_parser.py)]
 
-Example:
-- Andrew Ng Machine Learning
-- ML A–Z (Udemy)
-- Data Science Foundations
-- Web Dev Bootcamps, etc.
+* regex (email/phone)
+* spaCy NER (name, entities)
+* keyword / skill matcher
+  ↓
+  [Scoring Engine]
+* section completeness
+* skills coverage vs field taxonomies
+* projects & experience checks
+  ↓
+  [Field Predictor]  → recommends skills & courses
+  ↓
+  [UI / Streamlit]  → preview, score, recommendations, DB logging
 
----
+````
 
-  Section Detection
-Checks if your resume contains:
-- Summary  
-- Education  
-- Hobbies  
-- Work Experience  
-- Projects  
-- Skills  
-- Achievements  
-- Extra Sections  
+**Why this layout**
+- Keeps parsing + NLP logic decoupled from UI.
+- Simple scoring function that’s transparent and easy to explain to recruiters.
+- Data persistence optional (MySQL) for product analytics.
 
 ---
 
-  Tech Stack
-- **Python**
-- **Streamlit**
-- **spaCy**
-- **PyMuPDF / pdfminer**
-- **Pandas**
-- **MySQL (optional, for logging user stats)**
-- **Plotly (for visualizations)**
+## Key Features
+- Contact & entity extraction (name, email, phone)
+- Skill detection and editable tag UI
+- Candidate level heuristic (pages → rough seniority)
+- Field prediction (Data Science, Web, Android, iOS, UI/UX)
+- Resume scoring (0–100) with per-section feedback
+- Course recommendations per field
+- Local processing — privacy-first by default
 
 ---
 
- 🛠 Local Installation
+## Quick Start (developer)
 
- 1. Clone the repo
+1. **Clone**
 ```bash
 git clone https://github.com/nandinisingh16/IsMyResumeCooked.git
 cd IsMyResumeCooked
 ````
 
- 2. Create a virtual environment
+2. **Create venv & activate**
 
 ```bash
 python -m venv venv
-source venv/Scripts/activate    Windows
+# Windows
+venv\Scripts\activate
+# macOS / Linux
+source venv/bin/activate
 ```
 
- 3. Install dependencies
+3. **Install**
 
 ```bash
 pip install -r requirements.txt
 ```
 
- 4. (Optional) Add MySQL credentials
-
-Create a file:
-
-```
-.streamlit/secrets.toml
-```
-
-Inside:
+4. **(Optional) Add secrets for MySQL**
+   Create `.streamlit/secrets.toml` with:
 
 ```toml
 [mysql]
 host="localhost"
 user="root"
 password="YOUR_PASSWORD"
-database="resume_ai"
+database="cv"
 ```
 
- 5. Run the app
+5. **Run**
 
 ```bash
 streamlit run App.py
@@ -152,15 +138,14 @@ streamlit run App.py
 
 ---
 
-  Privacy
+## Deployment
 
-* Files are processed locally
-* Uploaded PDFs are not stored unless configured
-* No external API calls for parsing
+* Deployed on Streamlit Cloud (link above).
+* To deploy your fork: create a Streamlit Cloud app and point it to your GitHub repo; add any secrets in the Streamlit dashboard.
 
 ---
 
-  UI Preview
+## Screenshots
 
 <img width="146" height="129" alt="image" src="https://github.com/user-attachments/assets/6904fcec-939e-40a8-8daa-e6fd4ca20c37" />
 
@@ -174,15 +159,14 @@ streamlit run App.py
 
 ---
 
-  Author
 
-**Raj Nandini**
-🔗 LinkedIn: [https://www.linkedin.com/in/raj-nandini2216/](https://www.linkedin.com/in/raj-nandini2216/)
-© 2025 — All rights reserved.
+
+
+## Contact
+
+**Raj Nandini Singh**
+LinkedIn: [https://www.linkedin.com/in/raj-nandini2216/](https://www.linkedin.com/in/raj-nandini2216/)
+Email: [nandinisingh1622@gmail.com](mailto:nandinisingh1622@gmail.com)
 
 ---
 
-
----
-
-```
