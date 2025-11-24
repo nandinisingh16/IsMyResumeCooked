@@ -1,0 +1,16 @@
+# Core runtime
+streamlit>=1.24.0
+pandas>=2.0.0
+pillow>=9.0.0
+pymysql>=1.0.2
+pypdf>=3.0.0
+streamlit-tags>=0.0.8
+plotly>=5.0.0
+
+# NLP
+spacy>=3.5.0
+
+# Optional: install the spaCy small English model after pip install:
+#   python -m spacy download en_core_web_sm
+# Alternatively pin the model wheel (uncomment and set correct version if desired):
+# en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0-py3-none-any.whl
