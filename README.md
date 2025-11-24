@@ -4,7 +4,7 @@
 
 
 ````markdown
-#  Is My Resume Cooked?
+Is My Resume Cooked?
 **Score it. Fix it. Level up your job hunt.**  
 A Streamlit-powered resume analysis app that extracts information from a PDF resume, analyzes skills & sections, predicts your field, and recommends improvements.
 
@@ -12,7 +12,7 @@ A Streamlit-powered resume analysis app that extracts information from a PDF res
 
 ---
 
-##  Overview
+ Overview
 **Is My Resume Cooked** helps job seekers understand how strong their resume is by analyzing:
 
 - Extracted name, email, phone, skills  
@@ -28,9 +28,9 @@ Everything happens locally inside the session — safe and private.
 
 ---
 
-##  Features
+ Features
 
-###  Resume Parsing
+  Resume Parsing
 - Upload a single **PDF resume**
 - Extracts:
   - Name  
@@ -43,7 +43,7 @@ Everything happens locally inside the session — safe and private.
 
 ---
 
-###  Smart Analysis
+  Smart Analysis
 - Detects **candidate level** using rules + skills  
 - Counts keyword matches across fields:
   - Data Science  
@@ -58,7 +58,7 @@ Everything happens locally inside the session — safe and private.
 
 ---
 
-###  Field Prediction
+  Field Prediction
 Chooses the most suitable field based on matched keywords.
 
 Example fields:
@@ -70,7 +70,7 @@ Example fields:
 
 ---
 
-###  Course Recommendations
+  Course Recommendations
 Suggests curated courses based on predicted field.
 
 Example:
@@ -81,7 +81,7 @@ Example:
 
 ---
 
-###  Section Detection
+  Section Detection
 Checks if your resume contains:
 - Summary  
 - Education  
@@ -94,7 +94,7 @@ Checks if your resume contains:
 
 ---
 
-###  Tech Stack
+  Tech Stack
 - **Python**
 - **Streamlit**
 - **spaCy**
@@ -105,28 +105,28 @@ Checks if your resume contains:
 
 ---
 
-## 🛠 Local Installation
+ 🛠 Local Installation
 
-### 1. Clone the repo
+ 1. Clone the repo
 ```bash
 git clone https://github.com/nandinisingh16/IsMyResumeCooked.git
 cd IsMyResumeCooked
 ````
 
-### 2. Create a virtual environment
+ 2. Create a virtual environment
 
 ```bash
 python -m venv venv
-source venv/Scripts/activate   # Windows
+source venv/Scripts/activate    Windows
 ```
 
-### 3. Install dependencies
+ 3. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. (Optional) Add MySQL credentials
+ 4. (Optional) Add MySQL credentials
 
 Create a file:
 
@@ -144,7 +144,7 @@ password="YOUR_PASSWORD"
 database="resume_ai"
 ```
 
-### 5. Run the app
+ 5. Run the app
 
 ```bash
 streamlit run App.py
@@ -152,7 +152,7 @@ streamlit run App.py
 
 ---
 
-## 🔐 Privacy
+  Privacy
 
 * Files are processed locally
 * Uploaded PDFs are not stored unless configured
@@ -160,7 +160,7 @@ streamlit run App.py
 
 ---
 
-## 📸 UI Preview
+  UI Preview
 
 <img width="146" height="129" alt="image" src="https://github.com/user-attachments/assets/6904fcec-939e-40a8-8daa-e6fd4ca20c37" />
 
@@ -174,7 +174,7 @@ streamlit run App.py
 
 ---
 
-## 👩‍💻 Author
+  Author
 
 **Raj Nandini**
 🔗 LinkedIn: [https://www.linkedin.com/in/raj-nandini2216/](https://www.linkedin.com/in/raj-nandini2216/)
@@ -182,7 +182,6 @@ streamlit run App.py
 
 ---
 
-```
 
 ---
 
