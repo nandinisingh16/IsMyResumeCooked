@@ -1,99 +1,150 @@
 
+
+---
+
+
 ````markdown
 #  Is My Resume Cooked?
-**AI-powered resume analyzer that scores your resume, detects missing sections, identifies your candidate level, extracts skills, and recommends what to improve.**
+**Score it. Fix it. Level up your job hunt.**  
+A Streamlit-powered resume analysis app that extracts information from a PDF resume, analyzes skills & sections, predicts your field, and recommends improvements.
 
-Upload your PDF, get an instant breakdown, and level up your job hunt — all in one place.
+🔗 **Live Demo:** https://ismyresumecooked-xcrlp4mexfdrdxpclynlfv.streamlit.app/
+
+---
+
+##  Overview
+**Is My Resume Cooked** helps job seekers understand how strong their resume is by analyzing:
+
+- Extracted name, email, phone, skills  
+- Candidate level (Fresher / Intermediate / Experienced)  
+- Word-level keyword matching  
+- Section completeness (projects, education, experience…)  
+- Recommended skills to add  
+- Suggested job field  
+- Resume quality score  
+- Recommended online courses
+
+Everything happens locally inside the session — safe and private.
 
 ---
 
 ##  Features
 
-###  Resume Analysis
-- Extracts **name, email, phone**, and resume text
-- Detects **skills**, missing sections, and resume structure
-- Estimates **candidate level** (Fresher / Intermediate / Experienced)
-- Identifies **keyword matches** across fields:
+###  Resume Parsing
+- Upload a single **PDF resume**
+- Extracts:
+  - Name  
+  - Email  
+  - Phone  
+  - Page count  
+  - Skills  
+  - Text preview  
+- Uses `spaCy` for NER and custom regex-based extraction.
+
+---
+
+###  Smart Analysis
+- Detects **candidate level** using rules + skills  
+- Counts keyword matches across fields:
   - Data Science  
   - Web Development  
+  - Android  
+  - iOS  
   - UI/UX  
-  - Android Development  
-  - iOS Development  
+- Computes a **resume score (0–100)** based on:
+  - Section completeness  
+  - Skill variety  
+  - Project/experience presence  
 
-### AI Resume Score
-Get a clean **0–100 score** showing how polished your resume is:
+---
+
+###  Field Prediction
+Chooses the most suitable field based on matched keywords.
+
+Example fields:
+- Data Science  
+- Web Development  
+- UI/UX  
+- Android  
+- iOS  
+
+---
+
+###  Course Recommendations
+Suggests curated courses based on predicted field.
+
+Example:
+- Andrew Ng Machine Learning
+- ML A–Z (Udemy)
+- Data Science Foundations
+- Web Dev Bootcamps, etc.
+
+---
+
+###  Section Detection
+Checks if your resume contains:
 - Summary  
 - Education  
-- Experience  
+- Hobbies  
+- Work Experience  
 - Projects  
 - Skills  
 - Achievements  
-- Additional sections  
-
-### 🎓 Course Recommendations
-Smart recommendations based on your detected field:
-- Machine Learning (Andrew Ng)
-- ML A–Z (Udemy)
-- Data Science Foundations
-- More curated courses
-
-###  PDF Upload (Local Only)
-- Works with **single PDF**
-- No cloud upload — files are processed **locally** for privacy
-- Streamlit UI with drag-and-drop
+- Extra Sections  
 
 ---
 
-##  UI Preview
-
-The app includes:
-- **Resume Upload Panel**
-- **Extracted Text Preview (first 1k chars)**
-- **Skill Editor (+ suggestions)**
-- **Field Match Table**
-- **Recommended Courses Section**
-
->  *Privacy Note:* Uploaded resumes never leave your device (unless you configure database storage).  
-
----
-
-##  Tech Stack
+###  Tech Stack
 - **Python**
-- **Streamlit** (frontend UI)
-- **spaCy** (NER for name extraction)
-- **PyPDF2 / pdfplumber** for text extraction
-- **MySQL / PyMySQL** (optional storage)
-- **Custom rule-based NLP** for skills & sections
+- **Streamlit**
+- **spaCy**
+- **PyMuPDF / pdfminer**
+- **Pandas**
+- **MySQL (optional, for logging user stats)**
+- **Plotly (for visualizations)**
 
 ---
 
-##  Installation
+## 🛠 Local Installation
 
+### 1. Clone the repo
 ```bash
 git clone https://github.com/nandinisingh16/IsMyResumeCooked.git
 cd IsMyResumeCooked
-pip install -r requirements.txt
 ````
 
-### Add MySQL credentials (optional)
+### 2. Create a virtual environment
 
-Create:
+```bash
+python -m venv venv
+source venv/Scripts/activate   # Windows
+```
+
+### 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. (Optional) Add MySQL credentials
+
+Create a file:
 
 ```
 .streamlit/secrets.toml
 ```
 
+Inside:
+
 ```toml
 [mysql]
-host = "localhost"
-user = "root"
-password = "YOUR_PASSWORD"
-database = "resume_ai"
+host="localhost"
+user="root"
+password="YOUR_PASSWORD"
+database="resume_ai"
 ```
 
----
-
-##  Run the App
+### 5. Run the app
 
 ```bash
 streamlit run App.py
@@ -101,31 +152,38 @@ streamlit run App.py
 
 ---
 
-##  Project Structure
+## 🔐 Privacy
 
-```
- IsMyResumeCooked
- ┣ 📁 assets
- ┣ 📁 components
- ┣ 📁 utils
- ┣ App.py
- ┣ requirements.txt
- ┣ README.md
- ┗ .gitignore
-```
+* Files are processed locally
+* Uploaded PDFs are not stored unless configured
+* No external API calls for parsing
 
 ---
 
-##  Author
+## 📸 UI Preview
 
-**Raj Nandini Singh**
-🔗 LinkedIn: [https://linkedin.com/in/raj-nandini2216](https://linkedin.com/in/raj-nandini2216)
- Portfolio: Coming soon
+<img width="146" height="129" alt="image" src="https://github.com/user-attachments/assets/6904fcec-939e-40a8-8daa-e6fd4ca20c37" />
+
+<img width="1355" height="633" alt="image" src="https://github.com/user-attachments/assets/d12ecc81-4a80-4bd1-ab92-c8157368e6be" />
+
+<img width="591" height="512" alt="image" src="https://github.com/user-attachments/assets/7515c0a1-6ce0-4449-bade-b88f66f8b90f" />
+
+<img width="990" height="574" alt="image" src="https://github.com/user-attachments/assets/626f2e39-7283-48bd-8d28-8d9163ec326c" />
+
+<img width="1334" height="524" alt="image" src="https://github.com/user-attachments/assets/8bc659ad-4da9-4b60-9840-1a963fe75865" />
 
 ---
 
+## 👩‍💻 Author
 
+**Raj Nandini**
+🔗 LinkedIn: [https://www.linkedin.com/in/raj-nandini2216/](https://www.linkedin.com/in/raj-nandini2216/)
+© 2025 — All rights reserved.
 
+---
 
+```
+
+---
 
 ```
