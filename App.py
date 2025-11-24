@@ -32,22 +32,44 @@ DB_TABLE = "user_data"
 def get_connection():
     """
     Use Streamlit secrets for MySQL credentials.
-    Add a `mysql` section to .streamlit/secrets.toml or in Streamlit Cloud secrets:
-    [mysql]
-    host = "localhost"
-    user = "root"
-    password = "yourpassword"
-    database = "cv"
+    If the configured database does not exist (error 1049), connect without a database,
+    create it, then reconnect using the requested database.
+    Expects st.secrets["mysql"] with keys: host, user, password, database
     """
     secrets = st.secrets["mysql"]
-    return pymysql.connect(
-        host=secrets["host"],
-        user=secrets["user"],
-        password=secrets["password"],
-        database=secrets["database"],
-        autocommit=True
-    )
-
+    try:
+        return pymysql.connect(
+            host=secrets["host"],
+            user=secrets["user"],
+            password=secrets["password"],
+            database=secrets["database"],
+            autocommit=True
+        )
+    except pymysql.err.OperationalError as e:
+        # Unknown database -> create it then reconnect
+        if getattr(e, "args", [None])[0] == 1049:
+            tmp_conn = pymysql.connect(
+                host=secrets["host"],
+                user=secrets["user"],
+                password=secrets["password"],
+                autocommit=True
+            )
+            tmp_cursor = tmp_conn.cursor()
+            tmp_cursor.execute(
+                f"CREATE DATABASE IF NOT EXISTS `{secrets['database']}` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+            )
+            tmp_cursor.close()
+            tmp_conn.close()
+            # reconnect to the newly created database
+            return pymysql.connect(
+                host=secrets["host"],
+                user=secrets["user"],
+                password=secrets["password"],
+                database=secrets["database"],
+                autocommit=True
+            )
+        # re-raise other connection errors
+        raise
 # Initialize single connection using secrets
 connection = get_connection()
 cursor = connection.cursor()
